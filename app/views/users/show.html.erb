@@ -32,20 +32,12 @@
   </div>
 
   <div class="span3">
-    <h5><i class="icon-ok"></i>Email</h5>
-    <p><%=pp @user["emails"] %></p>
+    <h5><i class="icon-ok"></i>id</h5>
+    <p><%= @user["id"] %></p>
   </div>
   <div class="span3">
-    <h5><i class="icon-bold"></i>Title</h5>
-    <p><%= @user["title"] %>.</p>
-  </div>
-  <div class="span3">
-    <h5><i class="icon icon-star"></i> Groups 4</h5>
-    <p>
-      <% @user["groups"].each do |group| %>
-          <%= group["display"] %>
-      <% end%>
-    </p>
+    <h5><i class="icon-bold"></i>schemas</h5>
+    <p><%= @user["schemas"] %>.</p>
   </div>
 </div>
 

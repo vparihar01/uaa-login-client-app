@@ -57,10 +57,8 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
-    @user = User.find(params[:id])
     respond_to do |format|
       @user = HTTParty.get("#{UAA_TOKEN_SERVER}/Users/#{params[:id]}",
-                           :body => parameters,
                            :headers => {
                                'Content-Type' => 'application/json',
                                'Authorization' => "Bearer #{session[:access_token]}",
@@ -74,12 +72,10 @@ class UsersController < ApplicationController
       #
       if @user.success?
         logger.info("###### respo #{@user.inspect}")
-        format.html { redirect_to user_path(@result["id"]), notice: 'User login successful .' }
-        format.json { render json: @user, status: :created, location: @user }
+        format.html
       else
         flash[:warn] = @result["message"]
-        format.html { render action: "new"}
-        format.json { render json: "error", status: :unprocessable_entity }
+        format.html { redirect_to user_path}
       end
     end
   end
@@ -107,10 +103,10 @@ class UsersController < ApplicationController
       #
       if @result.success?
         logger.info("###### respo #{@result.inspect}")
-        format.html { redirect_to user_path(@result["id"]), notice: 'User login successful .' }
+        format.html { redirect_to user_path(@result["id"]), notice: 'User Created successful .' }
         format.json { render json: @user, status: :created, location: @user }
       else
-        flash[:warn] = @result["message"]
+        flash[:notice] = @result["message"]
         format.html { render action: "new"}
         format.json { render json: "error", status: :unprocessable_entity }
       end
@@ -121,16 +117,32 @@ class UsersController < ApplicationController
   # PUT /users/1
   # PUT /users/1.json
   def update
-    @user = User.find(params[:id])
-
+    parameters = ActiveSupport::JSON::encode(params_for_api_call(params[:user]))
     respond_to do |format|
-      if @user.update_attributes(params[:user])
+      @user = HTTParty.put("#{UAA_TOKEN_SERVER}/Users/#{params["id"]}",
+                              :body => parameters,
+                              :headers => {
+                                  'Content-Type' => 'application/json',
+                                  'Authorization' => "Bearer #{session[:access_token]}",
+                                  'Accept' => 'application/json',
+                                  'If-Match' => "2"
+                              } )
+      logger.info("###### respo #{@user.inspect}")
+      #response = RestClient.post("#{UAA_TOKEN_SERVER}/Users", {'Content-Type' => "application/json"},{:content_type => 'text/plain'}) \
+      #{|response, request, result, &block| response
+      #logger.info("###### respo #{request.inspect}")
+      #logger.info("###### respo #{JSON.parse(response)}")
+      #
+      if @user.success?
+        logger.info("###### respo #{@user.inspect}")
         format.html { redirect_to @user, notice: 'User was successfully updated.' }
-        format.json { head :no_content }
+        format.json { render json: @user, status: :created, location: @user }
       else
-        format.html { render action: "edit" }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        flash[:notice] = @user["message"]
+        format.html { render action: "edit"}
+        format.json { render json: "error", status: :unprocessable_entity }
       end
+      #}
     end
   end
 
@@ -147,6 +159,18 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def params_for_api_call_update options
+    {
+        "title" => options[:title],
+        "name" => {
+            "givenName" => options[:name]
+        },
+        "emails" => [{
+                         "value" => options[:email]
+                     }]
+    }
+  end
 
   def params_for_api_call options
     {

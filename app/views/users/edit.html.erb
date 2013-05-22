@@ -1,5 +1,36 @@
-<%- model_class = User -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => model_class.model_name.human %></h1>
+  <h1>Editing User</h1>
 </div>
-<%= render :partial => 'form' %>
+
+<%= form_tag("/users/#{@user["id"]}", :method => :put ,:class => 'form-horizontal' ) do %>
+  <div class="control-group">
+    <label class="control-label" for="inputEmail">Email</label>
+    <div class="controls">
+      <% @user["emails"].each do |email| %>
+          <%= email_field_tag "user[email]" , email["value"]%>
+      <% end%>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="inputTitle">Title</label>
+    <div class="controls">
+      <%= text_field_tag "user[title]" , @user["title"]%>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="inputName">Name</label>
+    <div class="controls">
+      <%= text_field_tag "user[name]" , @user["name"]["givenName"]%>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <input type="submit" class="btn" value="Update User"/>
+      <%= link_to 'Show', @user_session %> |
+      <%= link_to 'Back', user_sessions_path %>
+    </div>
+  </div>
+<% end %>
+
+
+

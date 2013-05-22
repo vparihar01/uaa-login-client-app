@@ -1,6 +1,33 @@
 <h1>Editing user_session</h1>
 
-<%= render 'form' %>
+<form class="form-horizontal" method="PUT" action="/Users/<%=@user["id"]%>">
+  <div class="control-group">
+    <label class="control-label" for="inputEmail">Email</label>
+    <div class="controls">
+      <% @user["emails"].each do |email| %>
+          <input type="text" id="inputEmail" placeholder="<%= email["value"] %>">
+      <% end%>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="inputTitle">Title</label>
+    <div class="controls">
+      <input type="text" id="inputTitle" placeholder="<%= @user["title"] %>">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="inputName">Name</label>
+    <div class="controls">
+      <input type="text" id="inputName" placeholder="<%= @user["name"]["givenName"] %>">
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <input type="submit" class="btn">Update User</input>
+      <%= link_to 'Show', @user_session %> |
+      <%= link_to 'Back', user_sessions_path %>
+    </div>
+  </div>
+</form>
 
-<%= link_to 'Show', @user_session %> |
-<%= link_to 'Back', user_sessions_path %>
+
