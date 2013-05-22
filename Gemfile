@@ -23,6 +23,12 @@ end
 gem 'jquery-rails'
 gem "therubyracer"
 gem "twitter-bootstrap-rails"
+gem 'authlogic'
+gem "rest-client"
+gem "yajl-ruby"
+gem "sequel"
+gem "cf-uaac"
+gem "cf-uaa-lib"
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

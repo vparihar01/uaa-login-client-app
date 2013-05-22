@@ -35,3 +35,11 @@ BootstrapDemo::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 end
+
+# URL of the uaa token server
+UAA_TOKEN_SERVER = ENV['UAA_TOKEN_SERVER'] || "http://localhost:8080/uaa"
+# Client secret of the login client. The login client allows this
+# application to authenticate to the token endpoint to get an access token
+# for a pre-authenticated email address (for the case when a pre-authenticated
+# email address is received by this application from an OpenID provider)
+LOGIN_CLIENT_SECRET = ENV['LOGIN_CLIENT_SECRET'] || "test"
