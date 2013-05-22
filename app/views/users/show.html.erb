@@ -1,22 +1,53 @@
-<%- model_class = User -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human %></h1>
+  <h2>User <%= @user["name"]["givenName"] %></h2>
 </div>
 
-<dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:username) %>:</strong></dt>
-  <dd><%= @user.username %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:email) %>:</strong></dt>
-  <dd><%= @user.email %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:crypted_password) %>:</strong></dt>
-  <dd><%= @user.crypted_password %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:password_salt) %>:</strong></dt>
-  <dd><%= @user.password_salt %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:persistence_token) %>:</strong></dt>
-  <dd><%= @user.persistence_token %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:title) %>:</strong></dt>
-  <dd><%= @user.title %></dd>
-</dl>
+<div class="row">
+  <div class="span3">
+    <h5><i class="icon icon-globe"></i> Username </h5>
+    <p><%= @user["userName"] %></p>
+  </div>
+
+  <div class="span3">
+    <h5><i class="icon-ok"></i>Email</h5>
+    <p><%=pp @user["emails"] %></p>
+  </div>
+  <div class="span3">
+    <h5><i class="icon-bold"></i>Title</h5>
+    <p><%= @user["title"] %>.</p>
+  </div>
+  <div class="span3">
+    <h5><i class="icon icon-star"></i> Groups 4</h5>
+    <p>
+      <% @user["groups"].each do |group| %>
+      <%= group["display"] %>
+      <% end%>
+    </p>
+  </div>
+</div>
+<div class="row">
+  <div class="span3">
+    <h5><i class="icon icon-globe"></i> Active </h5>
+    <p><%= @user["active"] %></p>
+  </div>
+
+  <div class="span3">
+    <h5><i class="icon-ok"></i>Email</h5>
+    <p><%=pp @user["emails"] %></p>
+  </div>
+  <div class="span3">
+    <h5><i class="icon-bold"></i>Title</h5>
+    <p><%= @user["title"] %>.</p>
+  </div>
+  <div class="span3">
+    <h5><i class="icon icon-star"></i> Groups 4</h5>
+    <p>
+      <% @user["groups"].each do |group| %>
+          <%= group["display"] %>
+      <% end%>
+    </p>
+  </div>
+</div>
 
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),

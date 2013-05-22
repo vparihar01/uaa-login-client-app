@@ -64,6 +64,9 @@ GEM
     highline (1.6.15)
     hike (1.2.2)
     http_parser.rb (0.5.3)
+    httparty (0.8.3)
+      multi_json (~> 1.0)
+      multi_xml
     i18n (0.6.1)
     journey (1.0.4)
     jquery-rails (2.2.1)
@@ -79,6 +82,7 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.23)
     multi_json (1.7.3)
+    multi_xml (0.5.3)
     polyglot (0.3.3)
     rack (1.4.5)
     rack-cache (1.2)
@@ -146,6 +150,7 @@ DEPENDENCIES
   cf-uaa-lib
   cf-uaac
   coffee-rails (~> 3.2.1)
+  httparty
   jquery-rails
   rails (= 3.2.13)
   rest-client

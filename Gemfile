@@ -29,6 +29,7 @@ gem "yajl-ruby"
 gem "sequel"
 gem "cf-uaac"
 gem "cf-uaa-lib"
+gem "httparty"
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

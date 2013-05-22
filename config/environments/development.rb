@@ -37,7 +37,7 @@ BootstrapDemo::Application.configure do
 end
 
 # URL of the uaa token server
-UAA_TOKEN_SERVER = ENV['UAA_TOKEN_SERVER'] || "http://localhost:8080/uaa"
+UAA_TOKEN_SERVER =  "http://localhost:8080/uaa"
 # Client secret of the login client. The login client allows this
 # application to authenticate to the token endpoint to get an access token
 # for a pre-authenticated email address (for the case when a pre-authenticated

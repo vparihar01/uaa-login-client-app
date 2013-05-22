@@ -31,7 +31,7 @@
         <ul class="nav">
           <% if current_user %>
               <li><%= link_to "Users", "/users"  %></li>
-              <li><%= link_to "Clients", "/clients"  %></li>
+              <li><%= link_to "Clients", "/users"  %></li>
               <li><%= link_to "Logout", "/logout"  %></li>
           <%else%>
               <li><%= link_to "Login", "/login"  %></li>
@@ -42,9 +42,11 @@
   </div>
 </div>
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span9">
+<div class="container">
+  <div class="row">
+    <!--<div class="span2"></div>-->
+
+    <div class="span12">
       <%= bootstrap_flash %>
       <%= yield %>
     </div>

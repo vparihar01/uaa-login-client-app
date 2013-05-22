@@ -42,12 +42,15 @@ class UserSessionsController < ApplicationController
         session[:token_type] = token_type
         logger.info("Inspecting post_request_for_user_info   #{session.inspect} ########")
         if @user_session.save
-          format.html { redirect_to root_path, notice: 'User session was successfully created.' }
+          format.html { redirect_to root_path, notice: 'User login successful .' }
           format.json { render json: @user_session, status: :created, location: @user_session }
         end
 
       else
-        format.html { render action: "new",notice: 'Wrong Credentials' }
+        flash[:notice] = 'Wrong Credentials'
+        format.html { render action: "new" }
+        format.json { render json: "Invalid", status: :created }
+
       end
       }
 

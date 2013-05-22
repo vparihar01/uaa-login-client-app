@@ -1,8 +1,16 @@
 class UsersController < ApplicationController
   # GET /users
   # GET /users.json
+  include HTTParty
+  before_filter :require_user
   def index
-    @users = User.all
+    data = RestClient.get "#{UAA_TOKEN_SERVER}/Users", { 'Authorization' => "Bearer #{session[:access_token]}" }
+    @users = JSON.parse(data)
+    logger.info("Inspecting response   #{data.inspect} ########")
+    #logger.info("Inspecting response   #{@users["resources"].inspect} ########")
+    @users  = @users["resources"]
+    #@users = User.all
+    logger.info("Inspecting response   #{@users.inspect} ########")
 
     respond_to do |format|
       format.html # index.html.erb
@@ -13,11 +21,26 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    @user = User.find(params[:id])
-
     respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @user }
+      @user = HTTParty.get("#{UAA_TOKEN_SERVER}/Users/#{params[:id]}",
+                           :headers => {
+                               'Content-Type' => 'application/json',
+                               'Authorization' => "Bearer #{session[:access_token]}",
+                               'Accept' => 'application/json'
+                           } )
+      logger.info("###### respo #{@user.inspect}")
+      #response = RestClient.post("#{UAA_TOKEN_SERVER}/Users", {'Content-Type' => "application/json"},{:content_type => 'text/plain'}) \
+      #{|response, request, result, &block| response
+      #logger.info("###### respo #{request.inspect}")
+      #logger.info("###### respo #{JSON.parse(response)}")
+      #
+      if @user.success?
+        logger.info("###### respo #{@user.inspect}")
+        format.html
+      else
+        flash[:warn] = @result["message"]
+        format.html { redirect_to user_path}
+      end
     end
   end
 
@@ -35,21 +58,63 @@ class UsersController < ApplicationController
   # GET /users/1/edit
   def edit
     @user = User.find(params[:id])
+    respond_to do |format|
+      @user = HTTParty.get("#{UAA_TOKEN_SERVER}/Users/#{params[:id]}",
+                           :body => parameters,
+                           :headers => {
+                               'Content-Type' => 'application/json',
+                               'Authorization' => "Bearer #{session[:access_token]}",
+                               'Accept' => 'application/json'
+                           } )
+      logger.info("###### respo #{@user.inspect}")
+      #response = RestClient.post("#{UAA_TOKEN_SERVER}/Users", {'Content-Type' => "application/json"},{:content_type => 'text/plain'}) \
+      #{|response, request, result, &block| response
+      #logger.info("###### respo #{request.inspect}")
+      #logger.info("###### respo #{JSON.parse(response)}")
+      #
+      if @user.success?
+        logger.info("###### respo #{@user.inspect}")
+        format.html { redirect_to user_path(@result["id"]), notice: 'User login successful .' }
+        format.json { render json: @user, status: :created, location: @user }
+      else
+        flash[:warn] = @result["message"]
+        format.html { render action: "new"}
+        format.json { render json: "error", status: :unprocessable_entity }
+      end
+    end
   end
 
   # POST /users
   # POST /users.json
   def create
-    @user = User.new(params[:user])
-
+    @user = User.new params[:user]
+    parameters = ActiveSupport::JSON::encode(params_for_api_call(params[:user]))
+    logger.info("#####{@user}")
+    logger.info("#####{parameters}")
     respond_to do |format|
-      if @user.save
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
+      @result = HTTParty.post("#{UAA_TOKEN_SERVER}/Users",
+                              :body => parameters,
+                              :headers => {
+                                  'Content-Type' => 'application/json',
+                                  'Authorization' => "Bearer #{session[:access_token]}",
+                                  'Accept' => 'application/json'
+                              } )
+      logger.info("###### respo #{@result.inspect}")
+      #response = RestClient.post("#{UAA_TOKEN_SERVER}/Users", {'Content-Type' => "application/json"},{:content_type => 'text/plain'}) \
+      #{|response, request, result, &block| response
+      #logger.info("###### respo #{request.inspect}")
+      #logger.info("###### respo #{JSON.parse(response)}")
+      #
+      if @result.success?
+        logger.info("###### respo #{@result.inspect}")
+        format.html { redirect_to user_path(@result["id"]), notice: 'User login successful .' }
         format.json { render json: @user, status: :created, location: @user }
       else
-        format.html { render action: "new" }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        flash[:warn] = @result["message"]
+        format.html { render action: "new"}
+        format.json { render json: "error", status: :unprocessable_entity }
       end
+      #}
     end
   end
 
@@ -79,5 +144,21 @@ class UsersController < ApplicationController
       format.html { redirect_to users_url }
       format.json { head :no_content }
     end
+  end
+
+  private
+
+  def params_for_api_call options
+    {
+        "userName" => options[:username],
+        "title" => options[:title],
+        "password" => options[:password],
+        "name" => {
+            "givenName" => options[:givenName]
+        },
+        "emails" => [{
+                         "value" => options[:email]
+                     }]
+    }
   end
 end
