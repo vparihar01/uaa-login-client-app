@@ -2,20 +2,19 @@
 
 <table>
   <tr>
-    <th>Username</th>
-    <th>Password</th>
-    <th></th>
+    <th>Name</th>
+    <th>Scope</th>
+    <th>Authorized Grant Types</th>
     <th></th>
     <th></th>
   </tr>
 
 <% @clients.each do |client| %>
   <tr>
-    <td><%= client.username %></td>
-    <td><%= client.password %></td>
-    <td><%= link_to 'Show', client %></td>
-    <td><%= link_to 'Edit', edit_client_path(client) %></td>
-    <td><%= link_to 'Destroy', client, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <td><%= client["client_id"] %></td>
+    <td><%= client["scope"] %></td>
+    <td><%= client["authorized_grant_types"]%></td>
+
   </tr>
 <% end %>
 </table>

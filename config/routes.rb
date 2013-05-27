@@ -2,7 +2,7 @@ BootstrapDemo::Application.routes.draw do
   resources :users
 
 
-  resources :users, :user_sessions
+  resources :users, :user_sessions,:clients
   match 'login' => 'user_sessions#new', :as => :login
   match 'logout' => 'user_sessions#destroy', :as => :logout
 

@@ -117,13 +117,14 @@ class UsersController < ApplicationController
   # PUT /users/1
   # PUT /users/1.json
   def update
-    parameters = ActiveSupport::JSON::encode(params_for_api_call(params[:user]))
+    parameters = ActiveSupport::JSON::encode(params_for_api_call_update(params[:user]))
+    logger.info("###### response #{parameters}")
     respond_to do |format|
       @user = HTTParty.put("#{UAA_TOKEN_SERVER}/Users/#{params["id"]}",
                               :body => parameters,
                               :headers => {
                                   'Content-Type' => 'application/json',
-                                  'Authorization' => "Bearer #{session[:access_token]}",
+                                  'Authorization' => "bearer #{session[:access_token]}",
                                   'Accept' => 'application/json',
                                   'If-Match' => "2"
                               } )
@@ -149,11 +150,15 @@ class UsersController < ApplicationController
   # DELETE /users/1
   # DELETE /users/1.json
   def destroy
-    @user = User.find(params[:id])
-    @user.destroy
+    @user = HTTParty.delete("#{UAA_TOKEN_SERVER}/Users/#{params["id"]}",
+                         :headers => {
+                             'Content-Type' => 'application/json',
+                             'Authorization' => "Bearer #{session[:access_token]}",
+                             'Accept' => 'application/json',
+                         } )
 
     respond_to do |format|
-      format.html { redirect_to users_url }
+      format.html { redirect_to users_path }
       format.json { head :no_content }
     end
   end
